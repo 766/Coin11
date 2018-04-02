@@ -1,0 +1,46 @@
+<resources>
+    <string name="app_name">BitCast</string>
+    <string name="share_btn">全文分享</string>
+    <string name="today">今天 03月21 星期三</string>
+    <string name="loading">Loading</string>
+    <string name="long_poem">官方介绍，RecyclerView用于在有限的窗口展现大量的数据，
+        其实早已经有了类似的控件，如ListView、GridView，那么相比它们，
+        RecyclerView有什么样优势呢？RecyclerView标准化了ViewHolder，
+        而且异常的灵活，可以轻松实现ListView实现不了的样式和功能，
+        通过布局管理器LayoutManager可控制Item的布局方式，
+        通过设置Item操作动画自定义Item添加和删除的动画，通过设置Item之间的间隔样式，自定义间隔</string>
+    <string name="news_title">陈伟星：区块链不是用来赚钱的，而是用来赚币的</string>
+    <string name="share_img">share_img</string>
+    <string name="scroll_text">官方介绍，RecyclerView用于在有限的窗口展现大量的数据，
+        其实早已经有了类似的控件，如ListView、GridView，那么相比它们，
+        RecyclerView有什么样优势呢？RecyclerView标准化了ViewHolder，
+        而且异常的灵活，可以轻松实现ListView实现不了的样式和功能，
+        通过布局管理器LayoutManager可控制Item的布局方式，
+        通过设置Item操作动画自定义Item添加和删除的动画，通过设置Item之间的间隔样式，自定义间隔官方介绍，RecyclerView用于在有限的窗口展现大量的数据，
+        其实早已经有了类似的控件，如ListView、GridView，那么相比它们，
+        RecyclerView有什么样优势呢？RecyclerView标准化了ViewHolder，
+        而且异常的灵活，可以轻松实现ListView实现不了的样式和功能，
+        通过布局管理器LayoutManager可控制Item的布局方式，
+        通过设置Item操作动画自定义Item添加和删除的动画，通过设置Item之间的间隔样式，自定义间隔官方介绍，RecyclerView用于在有限的窗口展现大量的数据，
+        其实早已经有了类似的控件，如ListView、GridView，那么相比它们，
+        RecyclerView有什么样优势呢？RecyclerView标准化了ViewHolder，
+        而且异常的灵活，可以轻松实现ListView实现不了的样式和功能，
+        通过布局管理器LayoutManager可控制Item的布局方式，
+        通过设置Item操作动画自定义Item添加和删除的动画，通过设置Item之间的间隔样式，自定义间隔官方介绍，RecyclerView用于在有限的窗口展现大量的数据，
+        其实早已经有了类似的控件，如ListView、GridView，那么相比它们，
+        RecyclerView有什么样优势呢？RecyclerView标准化了ViewHolder，
+        而且异常的灵活，可以轻松实现ListView实现不了的样式和功能，
+        通过布局管理器LayoutManager可控制Item的布局方式，
+        通过设置Item操作动画自定义Item添加和删除的动画，通过设置Item之间的间隔样式，自定义间隔</string>
+    <string name="date_format">今天 MM月dd日</string>
+    <string name="load_more">更多加载中……</string>
+    <string name="network_error">网络错误,点击重试</string>
+    <string name="empty">暂无数据</string>
+    <string name="no_more">(*￣ω￣) 没有更多了</string>
+    <string name="push_notification_title">test</string>
+    <string name="default_notification_channel_id">fcm_default_channel</string>
+    <string name="star">鼓励我们</string>
+    <string name="about_us">关于我们</string>
+    <string name="subscriber">新闻订阅</string>
+    <string name="version">版本更新</string>
+</resources>

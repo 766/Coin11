@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "129722441493",
+    "firebase_url": "https://bitcast-6e403.firebaseio.com",
+    "project_id": "bitcast-6e403",
+    "storage_bucket": "bitcast-6e403.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:129722441493:android:cddcffdc29d4c1a1",
+        "android_client_info": {
+          "package_name": "com.bitcast.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "129722441493-ledh9ajubvuhh4p9apaf0djujknnk8im.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCjul6UiTWXm9j3pIoU3YKUUtx_HTE6EP4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
