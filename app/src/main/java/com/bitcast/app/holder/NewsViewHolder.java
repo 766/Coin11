@@ -11,6 +11,7 @@ import com.bitcast.app.bean.News;
 
 import cn.carbs.android.expandabletextview.library.ExpandableTextView;
 
+
 /**
  * Created by KangWei on 2018-03-29.
  * 2018-03-29 00:11
@@ -36,18 +37,24 @@ public abstract class NewsViewHolder extends BaseViewHolder<News> {
         Log.i("ViewHolder", "position" + getDataPosition());
         newsTime.setText(news.getTime());
         newsTitle.setText(news.getTitle());
-        newsContent.setText(news.getContent());
+        newsContent.setExpandListener(new ExpandableTextView.OnExpandListener() {
+            @Override
+            public void onExpand(ExpandableTextView view) {
+                news.expandState(view.getExpandState());
+            }
+
+            @Override
+            public void onShrink(ExpandableTextView view) {
+                news.expandState(view.getExpandState());
+            }
+        });
+        newsContent.updateForRecyclerView(news.getContent(), 400, 0);
         shareBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 handleEvent(news);
             }
         });
-    }
-
-    @Override
-    public void cleanView() {
-        newsContent.updateForRecyclerView("", newsContent.getWidth(), ExpandableTextView.STATE_SHRINK);
     }
 
     protected abstract void handleEvent(News news);

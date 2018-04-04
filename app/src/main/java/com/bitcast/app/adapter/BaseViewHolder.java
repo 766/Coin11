@@ -24,7 +24,7 @@ import java.lang.reflect.Field;
  * @param <M>
  */
 abstract public class BaseViewHolder<M> extends RecyclerView.ViewHolder {
-    public BaseViewHolder(View itemView) {
+    BaseViewHolder(View itemView) {
         super(itemView);
     }
 
@@ -35,10 +35,8 @@ abstract public class BaseViewHolder<M> extends RecyclerView.ViewHolder {
     public void setData(M data) {
     }
 
-    public abstract void cleanView();
-
     protected <T extends View> T $(@IdRes int id) {
-        return (T) itemView.findViewById(id);
+        return itemView.findViewById(id);
     }
 
     protected Context getContext() {
@@ -46,7 +44,7 @@ abstract public class BaseViewHolder<M> extends RecyclerView.ViewHolder {
     }
 
     protected int getDataPosition() {
-        RecyclerView.Adapter adapter = getOwnerAdapter();
+        RecyclerView.Adapter<RecyclerView.ViewHolder> adapter = getOwnerAdapter();
         if (adapter != null && adapter instanceof RecyclerArrayAdapter) {
             return getAdapterPosition() - ((RecyclerArrayAdapter) adapter).getHeaderCount();
         }
@@ -55,21 +53,19 @@ abstract public class BaseViewHolder<M> extends RecyclerView.ViewHolder {
 
 
     @Nullable
-    protected <T extends RecyclerView.Adapter> T getOwnerAdapter() {
+    private <T extends RecyclerView.Adapter> T getOwnerAdapter() {
         RecyclerView recyclerView = getOwnerRecyclerView();
         return recyclerView == null ? null : (T) recyclerView.getAdapter();
     }
 
     @Nullable
-    protected RecyclerView getOwnerRecyclerView() {
+    private RecyclerView getOwnerRecyclerView() {
         try {
             Field field = RecyclerView.ViewHolder.class.getDeclaredField("mOwnerRecyclerView");
             field.setAccessible(true);
             return (RecyclerView) field.get(this);
-        } catch (NoSuchFieldException e) {
-        } catch (IllegalAccessException e) {
+        } catch (NoSuchFieldException | IllegalAccessException ignored) {
         }
         return null;
     }
-
 }

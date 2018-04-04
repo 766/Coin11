@@ -42,12 +42,6 @@ public class SettingViewHolder extends BaseViewHolder<Setting> {
         }
     }
 
-    @Override
-    public void cleanView() {
-
-    }
-
-
     public SwitchView getSubscribe() {
         return subscribe;
     }

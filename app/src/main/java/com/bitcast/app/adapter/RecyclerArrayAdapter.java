@@ -17,6 +17,7 @@
 package com.bitcast.app.adapter;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -75,7 +76,7 @@ abstract public class RecyclerArrayAdapter<T> extends RecyclerView.Adapter<BaseV
      *
      * @param context The current context.
      */
-    public RecyclerArrayAdapter(Context context) {
+    protected RecyclerArrayAdapter(Context context) {
         init(context, new ArrayList<T>());
     }
 
@@ -169,7 +170,7 @@ abstract public class RecyclerArrayAdapter<T> extends RecyclerView.Adapter<BaseV
 
 
     @Override
-    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+    public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
         this.mRecyclerView = recyclerView;
 
@@ -252,7 +253,7 @@ abstract public class RecyclerArrayAdapter<T> extends RecyclerView.Adapter<BaseV
         synchronized (mLock) {
             mObjects.addAll(index, Arrays.asList(object));
         }
-        int dataCount = object == null ? 0 : object.length;
+        int dataCount = object.length;
         if (mNotifyOnChange) notifyItemRangeInserted(headers.size() + index, dataCount);
         log("insertAll notifyItemRangeInserted " + ((headers.size() + index) + "," + (dataCount)));
     }
@@ -267,7 +268,7 @@ abstract public class RecyclerArrayAdapter<T> extends RecyclerView.Adapter<BaseV
         synchronized (mLock) {
             mObjects.addAll(index, object);
         }
-        int dataCount = object == null ? 0 : object.size();
+        int dataCount = object.size();
         if (mNotifyOnChange) notifyItemRangeInserted(headers.size() + index, dataCount);
         log("insertAll notifyItemRangeInserted " + ((headers.size() + index) + "," + (dataCount)));
     }
@@ -430,8 +431,9 @@ abstract public class RecyclerArrayAdapter<T> extends RecyclerView.Adapter<BaseV
         return null;
     }
 
+    @NonNull
     @Override
-    public final BaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public final BaseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = createSpViewByType(parent, viewType);
         if (view != null) {
             return new StateViewHolder(view);
@@ -478,8 +480,7 @@ abstract public class RecyclerArrayAdapter<T> extends RecyclerView.Adapter<BaseV
         OnBindViewHolder(holder, position - headers.size());
     }
 
-    public void OnBindViewHolder(BaseViewHolder holder, final int position) {
-        holder.cleanView();
+    private void OnBindViewHolder(BaseViewHolder<T> holder, final int position) {
         holder.setData(getItem(position));
     }
 
@@ -609,13 +610,9 @@ abstract public class RecyclerArrayAdapter<T> extends RecyclerView.Adapter<BaseV
 
     private class StateViewHolder extends BaseViewHolder {
 
-        public StateViewHolder(View itemView) {
+        StateViewHolder(View itemView) {
             super(itemView);
         }
 
-        @Override
-        public void cleanView() {
-
-        }
     }
 }

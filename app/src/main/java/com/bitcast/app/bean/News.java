@@ -11,6 +11,7 @@ import android.os.Parcelable;
  */
 
 public class News implements Parcelable {
+
     public static final Creator<News> CREATOR = new Creator<News>() {
         @Override
         public News createFromParcel(Parcel in) {
@@ -25,6 +26,7 @@ public class News implements Parcelable {
     private String time;
     private String title;
     private String content;
+    private int mExpandState = 0;
 
     private News(Parcel in) {
         time = in.readString();
@@ -56,6 +58,15 @@ public class News implements Parcelable {
         this.content = content;
     }
 
+    public int getExpandState() {
+        return mExpandState;
+    }
+
+
+    public void expandState(int expandState) {
+        this.mExpandState = expandState;
+    }
+
     /**
      * Describe the kinds of special objects contained in this Parcelable
      * instance's marshaled representation. For example, if the object will
@@ -83,6 +94,6 @@ public class News implements Parcelable {
         dest.writeString(time);
         dest.writeString(title);
         dest.writeString(content);
+        dest.writeInt(mExpandState);
     }
-
 }
