@@ -59,6 +59,7 @@ dependencies {
     implementation 'com.github.nuptboyzhb.lib.uikit:superswiperefreshlayout:1.0.0'
     implementation 'com.github.mancj:MaterialSearchBar:0.7.6'
 
+    implementation 'com.squareup.okhttp3:okhttp:3.10.0'
     implementation 'com.readystatesoftware.systembartint:systembartint:1.0.3'
     implementation 'cn.carbs.android:ExpandableTextView:1.0.3'
     implementation 'com.anthonycr.grant:permissions:1.0'

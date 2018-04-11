@@ -43,4 +43,5 @@
     <string name="about_us">关于我们</string>
     <string name="subscriber">新闻订阅</string>
     <string name="version">版本更新</string>
+    <string name="new_msg">有新的消息</string>
 </resources>

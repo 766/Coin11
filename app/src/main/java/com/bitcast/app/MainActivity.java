@@ -1,6 +1,9 @@
 package com.bitcast.app;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -39,13 +42,15 @@ public class MainActivity extends AppCompatActivity {
     private static final int[] mNormalIcon = {R.mipmap.settings, R.mipmap.trend, R.mipmap.settings};
 
     private static final int PAGES = 3;
+    private static final String ACTION_NEW_MSG = "com.bitcast.new.msg";
+    private final Fragment[] fragments = new Fragment[3];
     private ViewPager mVp;
     private JPTabBar mTabBar;
     private Toolbar mToolBar;
     private View mSearchView;
-    private Fragment[] fragments = new Fragment[3];
     // 用来计算返回键的点击间隔时间
     private long exitTime = 0;
+    private BroadcastReceiver mReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +70,22 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(ACTION_NEW_MSG);
+        registerReceiver(mReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                HomeFragment fragment = (HomeFragment) fragments[0];
+                fragment.newMsg();
+            }
+        }, filter);
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(mReceiver);
     }
 
     @Override

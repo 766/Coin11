@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,15 +24,26 @@ import com.bitcast.app.adapter.RecyclerArrayAdapter;
 import com.bitcast.app.bean.News;
 import com.bitcast.app.holder.NewsViewHolder;
 import com.bitcast.app.utils.DateUtil;
+import com.bitcast.app.utils.GsonUtil;
 import com.bitcast.app.utils.Week;
+import com.kakao.util.helper.log.Logger;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.SimpleMultiPurposeListener;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import ezy.ui.layout.LoadingLayout;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 /**
  * Created by KangWei on 2018/3/21.
@@ -41,18 +53,20 @@ import ezy.ui.layout.LoadingLayout;
  */
 
 public class HomeFragment extends Fragment {
-    private LinearLayoutManager mLayoutManager;
+    private static final String ENDPOINT = "http://192.168.0.162:8088";
     private String today;
     private RecyclerArrayAdapter<News> mAdapter;
     private int page = 0;
     private boolean hasNetWork = true;
     private LoadingLayout mLoadingLayout;
+    private SmartRefreshLayout mRefreshLayout;
+    private View newMsg;
 
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initData();
+        today = getCurrentDate();
     }
 
     /**
@@ -78,12 +92,90 @@ public class HomeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         initView(view);
+        fetchData(UI_STAT.loading);
         return view;
     }
 
-    private void initData() {
-        mLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-        today = getCurrentDate();
+    public void newMsg() {
+        newMsg.setVisibility(View.VISIBLE);
+    }
+
+    private void fetchData(final UI_STAT stat) {
+        setUiStat(stat);
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(ENDPOINT)
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                setUiStat(UI_STAT.error, "Oops:连接服务器异常咯");
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) {
+                if (response.isSuccessful()) {
+                    try {
+                        ResponseBody body = response.body();
+                        if (body == null) {
+                            setUiStat(UI_STAT.empty);
+                        } else {
+                            final String result = body.string();
+                            if (!TextUtils.isEmpty(result)) {
+                                final List<News> news = GsonUtil.toList(result, News.class);
+                                mRefreshLayout.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        mAdapter.addAll(news);
+                                    }
+                                });
+                                setUiStat(UI_STAT.normal);
+                            }
+                        }
+                    } catch (Exception e) {
+                        Logger.d("Exception = " + e);
+                    }
+                }
+            }
+        });
+    }
+
+    private void setUiStat(final UI_STAT uiStat) {
+        setUiStat(uiStat, null);
+    }
+
+    private void setUiStat(final UI_STAT uiStat, final String msg) {
+        mRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                switch (uiStat) {
+                    case loading:
+                        mLoadingLayout.showLoading();
+                        mRefreshLayout.setEnableLoadMore(false);
+                        mRefreshLayout.setEnableRefresh(false);
+                        break;
+                    case empty:
+                        mLoadingLayout.showEmpty();
+                        mRefreshLayout.setEnableRefresh(true);
+                        mRefreshLayout.finishRefresh();
+                        break;
+                    case error:
+                        mLoadingLayout.setErrorText(msg);
+                        mLoadingLayout.showError();
+                        mRefreshLayout.finishRefresh();
+                        mRefreshLayout.setEnableLoadMore(false);
+                        mRefreshLayout.setEnableRefresh(false);
+                        break;
+                    case normal:
+                        mRefreshLayout.setEnableLoadMore(true);
+                        mRefreshLayout.setEnableRefresh(true);
+                        mRefreshLayout.finishRefresh();
+                        mLoadingLayout.showContent();
+                        break;
+                }
+
+            }
+        });
     }
 
     private String getCurrentDate() {
@@ -94,11 +186,15 @@ public class HomeFragment extends Fragment {
     }
 
     private void initView(View view) {
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+
         TextView tvShow = view.findViewById(R.id.today);
         tvShow.setText(today);
 
-        RefreshLayout refreshLayout = view.findViewById(R.id.refreshLayout);
-        refreshLayout.setEnableFooterFollowWhenLoadFinished(true);
+        newMsg = view.findViewById(R.id.new_msg);
+
+        mRefreshLayout = view.findViewById(R.id.refreshLayout);
+        mRefreshLayout.setEnableFooterFollowWhenLoadFinished(true);
 
         RecyclerView mRecyclerView = view.findViewById(R.id.content_list);
         mRecyclerView.setLayoutManager(mLayoutManager);
@@ -106,7 +202,11 @@ public class HomeFragment extends Fragment {
         mLoadingLayout = view.findViewById(R.id.loading);
         mLoadingLayout.showLoading();
 
-        mRecyclerView.setAdapter(mAdapter = new RecyclerArrayAdapter<News>(getContext()) {
+        setListener(mRecyclerView);
+    }
+
+    private void setListener(RecyclerView recyclerView) {
+        recyclerView.setAdapter(mAdapter = new RecyclerArrayAdapter<News>(getContext()) {
             @Override
             public BaseViewHolder OnCreateViewHolder(ViewGroup parent, int viewType) {
                 return new NewsViewHolder(parent) {
@@ -120,25 +220,19 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        refreshLayout.setOnMultiPurposeListener(new SimpleMultiPurposeListener() {
+        mRefreshLayout.setOnMultiPurposeListener(new SimpleMultiPurposeListener() {
             @Override
             public void onRefresh(@NonNull final RefreshLayout refreshLayout) {
-                page = 0;
-                refreshLayout.getLayout().postDelayed(new Runnable() {
+                refreshLayout.getLayout().post(new Runnable() {
                     @Override
                     public void run() {
-                        mAdapter.clear();
                         //刷新
                         if (!hasNetWork) {
                             return;
                         }
-                        mAdapter.addAll(NewsProvider.getPersonList(page));
-                        page = 1;
-                        refreshLayout.finishRefresh();
-                        refreshLayout.setNoMoreData(false);//恢复上拉状态
-                        mLoadingLayout.showContent();
+                        fetchData(UI_STAT.normal);
                     }
-                }, 2000);
+                });
             }
 
             @Override
@@ -162,6 +256,28 @@ public class HomeFragment extends Fragment {
             }
 
         });
+
+        mLoadingLayout.setRetryListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fetchData(UI_STAT.loading);
+            }
+        });
+
+        newMsg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                newMsg.setVisibility(View.GONE);
+                mRefreshLayout.autoRefresh();
+            }
+        });
+    }
+
+    private enum UI_STAT {
+        loading,
+        empty,
+        error,
+        normal
     }
 
 }

@@ -29,6 +29,7 @@
         app:layout_constraintTop_toBottomOf="@+id/today"
         app:srlEnableAutoLoadMore="false"
         app:srlPrimaryColor="@color/colorTextContent">
+
         <com.scwang.smartrefresh.layout.header.ClassicsHeader
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -48,6 +49,7 @@
                 android:layout_height="match_parent"
                 android:overScrollMode="never" />
         </ezy.ui.layout.LoadingLayout>
+
         <com.scwang.smartrefresh.layout.footer.ClassicsFooter
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -55,5 +57,17 @@
             app:srlClassicsSpinnerStyle="Translate"
             app:srlDrawableProgress="@drawable/ic_progress_puzzle" />
     </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
+    <TextView
+        android:id="@+id/new_msg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/shape_new_mgs_bg"
+        android:text="@string/new_msg"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/today" />
 
 </android.support.constraint.ConstraintLayout>

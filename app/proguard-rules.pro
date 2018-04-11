@@ -30,3 +30,15 @@
   public *;
 }
 -dontwarn android.support.v4.**,org.slf4j.**,com.google.android.gms.**
+##---------------Begin: proguard configuration for Gson  ----------
+# Gson uses generic type information stored in a class file when working with fields. Proguard
+# removes such information by default, so configure it to keep all of it.
+-keepattributes Signature
+# Gson specific classes
+-keep class sun.misc.Unsafe { *; }
+#-keep class com.google.gson.stream.** { *; }
+# Application classes that will be serialized/deserialized over Gson
+-keep class com.m.myapp.bean.** { *; }  ##这里需要改成解析到哪个  javabean
+-keep class com.m.myapp.ta.bean.** { *; }
+
+##---------------End: proguard configuration for Gson  ----------
