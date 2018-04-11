@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Toast;
 
+import com.bitcast.app.fragment.ExchangeFragment;
 import com.bitcast.app.fragment.HomeFragment;
 import com.bitcast.app.fragment.SettingFragment;
 import com.jpeng.jptabbar.JPTabBar;
@@ -116,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
         //设置导航图标要在setSupportActionBar方法之后
         setSupportActionBar(mToolBar);
         fragments[0] = new HomeFragment();
-        fragments[1] = new SettingFragment();
+        fragments[1] = new ExchangeFragment();
         fragments[2] = new SettingFragment();
     }
 
