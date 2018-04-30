@@ -8,6 +8,10 @@ import android.widget.TextView;
 import com.bitcast.app.R;
 import com.bitcast.app.adapter.BaseViewHolder;
 import com.bitcast.app.bean.News;
+import com.bitcast.app.utils.DateStyle;
+import com.bitcast.app.utils.DateUtil;
+
+import java.util.Date;
 
 import cn.carbs.android.expandabletextview.library.ExpandableTextView;
 
@@ -35,8 +39,8 @@ public abstract class NewsViewHolder extends BaseViewHolder<News> {
     @Override
     public void setData(final News news) {
         Log.i("ViewHolder", "position" + getDataPosition());
-        newsTime.setText(news.getTime());
-        newsTitle.setText(news.getTitle());
+        newsTime.setText(getTime(news.getId()));
+        newsTitle.setText(news.getH1());
         newsContent.setExpandListener(new ExpandableTextView.OnExpandListener() {
             @Override
             public void onExpand(ExpandableTextView view) {
@@ -48,13 +52,21 @@ public abstract class NewsViewHolder extends BaseViewHolder<News> {
                 news.expandState(view.getExpandState());
             }
         });
-        newsContent.updateForRecyclerView(news.getContent(), 400, 0);
+        newsContent.updateForRecyclerView(news.getBody(), 400, 0);
         shareBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 handleEvent(news);
             }
         });
+    }
+
+    private String getTime(long timestamp) {
+        Date date = new Date(timestamp);
+        long currentTimeMillis = System.currentTimeMillis();
+        return (currentTimeMillis - timestamp) > 12 * 60 * 60 * 1000
+                ? DateUtil.DateToString(date, DateStyle.MM_DD_HH_MM)
+                :DateUtil.DateToString(date,DateStyle.HH_MM);
     }
 
     protected abstract void handleEvent(News news);

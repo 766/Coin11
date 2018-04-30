@@ -50,8 +50,8 @@ public class ShareActivity extends AppCompatActivity {
         TextView newsContent = findViewById(R.id.content);
 
         News news = getIntent().getParcelableExtra("news");
-        newsTitle.setText(news.getTitle());
-        newsContent.setText(news.getContent());
+        newsTitle.setText(news.getH1());
+        newsContent.setText(news.getBody());
     }
 
 

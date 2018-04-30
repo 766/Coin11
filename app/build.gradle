@@ -41,7 +41,7 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     implementation 'com.android.support:appcompat-v7:27.1.1'
-    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     implementation 'com.android.support:recyclerview-v7:27.1.1'
 
     implementation 'com.google.code.gson:gson:2.8.1'
@@ -60,6 +60,7 @@ dependencies {
     implementation 'com.github.mancj:MaterialSearchBar:0.7.6'
 
     implementation 'com.squareup.okhttp3:okhttp:3.10.0'
+    implementation group: 'com.alibaba', name: 'fastjson', version: '1.2.12'
     implementation 'com.readystatesoftware.systembartint:systembartint:1.0.3'
     implementation 'cn.carbs.android:ExpandableTextView:1.0.3'
     implementation 'com.anthonycr.grant:permissions:1.0'
