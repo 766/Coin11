@@ -20,4 +20,13 @@
     <string name="search_cancel">取消</string>
     <string name="search_history">历史搜索</string>
     <string name="clear_search_history">清除历史搜索记录</string>
+    <string name="news">快讯</string>
+    <string name="exchanges">交易所</string>
+    <string name="settings">我的</string>
+    <string name="exit_tip">再按一次退出程序</string>
+    <string name="telegram">Telegram</string>
+    <string name="push_me_news">订阅新闻</string>
+    <string name="rote_it_now">Rote it now</string>
+    <string name="share_app">Share this App</string>
+    <string name="about">About</string>
 </resources>

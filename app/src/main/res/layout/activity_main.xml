@@ -4,14 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.bitcast.app.MainActivity">
+    tools:context=".MainActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
-        app:layout_constraintBottom_toTopOf="@+id/vp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -21,7 +20,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:background="@mipmap/logo" />
+            android:background="@mipmap/logo"
+            android:contentDescription="@string/app_name" />
 
         <ImageView
             android:id="@+id/search"
@@ -30,8 +30,10 @@
             android:layout_gravity="end"
             android:layout_marginEnd="15dp"
             android:background="@mipmap/search"
-            android:contentDescription="@string/today" />
+            android:contentDescription="@string/today"
+            android:visibility="gone" />
     </android.support.v7.widget.Toolbar>
+
 
     <android.support.v4.view.ViewPager
         android:id="@+id/vp"
@@ -53,7 +55,7 @@
         app:TabIconSize="20dp"
         app:TabPageAnimateEnable="true"
         app:TabPressAnimateEnable="true"
-        app:TabSelectColor="#0055dd"
+        app:TabSelectColor="@color/colorPrimary"
         app:TabTextSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"

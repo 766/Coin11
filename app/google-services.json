@@ -1,27 +1,27 @@
 {
   "project_info": {
-    "project_number": "129722441493",
-    "firebase_url": "https://bitcast-6e403.firebaseio.com",
-    "project_id": "bitcast-6e403",
-    "storage_bucket": "bitcast-6e403.appspot.com"
+    "project_number": "444442688233",
+    "firebase_url": "https://bitcast-695ab.firebaseio.com",
+    "project_id": "bitcast-695ab",
+    "storage_bucket": "bitcast-695ab.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:129722441493:android:cddcffdc29d4c1a1",
+        "mobilesdk_app_id": "1:444442688233:android:a0211f360b7fe055",
         "android_client_info": {
-          "package_name": "com.bitcast.app"
+          "package_name": "news.bcast.app"
         }
       },
       "oauth_client": [
         {
-          "client_id": "129722441493-ledh9ajubvuhh4p9apaf0djujknnk8im.apps.googleusercontent.com",
+          "client_id": "444442688233-ngbgftfgmbs45m5ib2k8tvtudpij0clr.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCjul6UiTWXm9j3pIoU3YKUUtx_HTE6EP4"
+          "current_key": "AIzaSyB0usa9XMFL5lVOFgqnSfSaph6bx3QXeBg"
         }
       ],
       "services": {
