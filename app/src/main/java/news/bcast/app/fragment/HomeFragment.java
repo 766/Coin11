@@ -14,8 +14,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.TypeReference;
 import com.kakao.util.helper.log.Logger;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -58,16 +60,55 @@ import okhttp3.ResponseBody;
 public class HomeFragment extends Fragment {
     private String today;
     private RecyclerArrayAdapter<News> mAdapter;
-    private int more = -1;
+    private int currentPage;
     private boolean hasNetWork = true;
     private LoadingLayout mLoadingLayout;
     private SmartRefreshLayout mRefreshLayout;
     private View newMsg;
+    private JSONArray allDate;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         today = getCurrentDate();
+    }
+
+    private void getAllDate() {
+        setUiStat(UI_STAT.loading);
+        OkHttpClient client = new OkHttpClient();
+        String endpoint = "http://bcast.news/feeds/ls.json";
+        Request request = new Request.Builder()
+                .url(endpoint)
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                setUiStat(UI_STAT.error, getString(R.string.error));
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) {
+                if (response.isSuccessful() && response.code() == 200) {
+                    try {
+                        ResponseBody body = response.body();
+                        if (body == null) {
+                            fetchData(UI_STAT.empty);
+                        } else {
+                            final String result = body.string();
+                            if (!TextUtils.isEmpty(result)) {
+                                allDate = JSON.parseArray(result);
+                                currentPage = allDate.size() - 1;
+                                fetchData(null);
+                            }
+                        }
+                    } catch (Exception e) {
+                        Logger.d("Exception = " + e);
+                    }
+                } else {
+                    fetchData(UI_STAT.empty);
+                }
+            }
+        });
     }
 
     /**
@@ -91,9 +132,10 @@ public class HomeFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        currentPage = 0;
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         initView(view);
-        fetchData(UI_STAT.loading, getDate(0));
+        getAllDate();
         return view;
     }
 
@@ -101,18 +143,22 @@ public class HomeFragment extends Fragment {
         newMsg.setVisibility(View.VISIBLE);
     }
 
-    private void fetchData(final UI_STAT stat, String date) {
+    private void fetchData(final UI_STAT stat) {
         setUiStat(stat);
         OkHttpClient client = new OkHttpClient();
         String baseUrl = "http://bcast.news/feeds/";
-        String endpoint = baseUrl + date + ".json";
+        if (currentPage < 0 && stat == UI_STAT.loadMore) {
+            Toast.makeText(getActivity(), R.string.end, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        String endpoint = baseUrl + allDate.get(currentPage);
         Request request = new Request.Builder()
                 .url(endpoint)
                 .build();
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                setUiStat(UI_STAT.error, "Oops:连接服务器异常咯");
+                setUiStat(UI_STAT.error, getString(R.string.error));
             }
 
             @Override
@@ -121,7 +167,7 @@ public class HomeFragment extends Fragment {
                     try {
                         ResponseBody body = response.body();
                         if (body == null) {
-                            fetchData(UI_STAT.loadMore, getDate(more--));
+                            fetchData(UI_STAT.empty);
                         } else {
                             final String result = body.string();
                             if (!TextUtils.isEmpty(result)) {
@@ -143,8 +189,10 @@ public class HomeFragment extends Fragment {
                                 mRefreshLayout.post(new Runnable() {
                                     @Override
                                     public void run() {
-                                        if (newsList.size() < 8)
-                                            fetchData(UI_STAT.loadMore, getDate(more--));
+                                        if (newsList.size() < 4) {
+                                            currentPage--;
+                                            fetchData(UI_STAT.loadMore);
+                                        }
                                         Collections.sort(newsList);
                                         mAdapter.addAll(newsList);
                                     }
@@ -156,7 +204,7 @@ public class HomeFragment extends Fragment {
                         Logger.d("Exception = " + e);
                     }
                 } else {
-                    fetchData(UI_STAT.loadMore, getDate(more--));
+                    fetchData(UI_STAT.loadMore);
                 }
             }
         });
@@ -262,8 +310,8 @@ public class HomeFragment extends Fragment {
                             return;
                         }
                         mAdapter.clear();
-                        more = -1;
-                        fetchData(UI_STAT.normal, getDate(0));
+                        currentPage = allDate.size() - 1;
+                        fetchData(UI_STAT.normal);
                     }
                 });
             }
@@ -276,7 +324,8 @@ public class HomeFragment extends Fragment {
                         if (!hasNetWork) {
                             return;
                         }
-                        fetchData(UI_STAT.loadMore, getDate(more--));
+                        currentPage--;
+                        fetchData(UI_STAT.loadMore);
 //                        if (mAdapter.getCount() > 12) {
 //                            Toast.makeText(getActivity(), "数据全部加载完毕", Toast.LENGTH_SHORT).show();
 //                            refreshLayout.finishLoadMoreWithNoMoreData();//设置之后，将不会再触发加载事件
@@ -294,8 +343,8 @@ public class HomeFragment extends Fragment {
         mLoadingLayout.setRetryListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                more = -1;
-                fetchData(UI_STAT.loading, getDate(0));
+                currentPage = allDate.size() - 1;
+                fetchData(UI_STAT.loading);
             }
         });
 

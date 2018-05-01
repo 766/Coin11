@@ -40,7 +40,7 @@ public class ExchangeFragment extends android.support.v4.app.Fragment {
                 return true;
             }
         });
-        webView.loadUrl("http://www.baidu.com");
+        webView.loadUrl("https://bitmarvel.cc/exchanges/m");
 
     }
 }

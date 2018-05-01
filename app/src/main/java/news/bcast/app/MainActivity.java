@@ -35,13 +35,13 @@ public class MainActivity extends AppCompatActivity {
     @SeleIcons
     @SuppressWarnings("all ")
 
-    private static final int[] mSelectIcons = {R.mipmap.settings, R.mipmap.trend, R.mipmap.settings};
+    private static final int[] mSelectIcons = {R.mipmap.news, R.mipmap.trend, R.mipmap.settings};
 
     //设置未选中图标Í
     @NorIcons
     @SuppressWarnings("all ")
 
-    private static final int[] mNormalIcon = {R.mipmap.settings, R.mipmap.trend, R.mipmap.settings};
+    private static final int[] mNormalIcon = {R.mipmap.news, R.mipmap.trend, R.mipmap.settings};
 
     private static final int PAGES = 3;
     private static final String ACTION_NEW_MSG = "com.bitcast.new.msg";

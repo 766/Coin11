@@ -47,9 +47,9 @@ public class NewsProvider {
 
     public static List<Setting> getSettingList() {
         ArrayList<Setting> arr = new ArrayList<>();
-        arr.add(new Setting(App.getInstance().getString(R.string.telegram)));
+//        arr.add(new Setting(App.getInstance().getString(R.string.telegram)));
         arr.add(new Setting(App.getInstance().getString(R.string.push_me_news), "true"));
-        arr.add(new Setting(App.getInstance().getString(R.string.rote_it_now)));
+        arr.add(new Setting(App.getInstance().getString(R.string.rate_it_now)));
         arr.add(new Setting(App.getInstance().getString(R.string.share_app)));
         arr.add(new Setting(App.getInstance().getString(R.string.about), App.getInstance().getAppVersionName()));
         return arr;

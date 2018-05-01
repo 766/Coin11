@@ -1,10 +1,12 @@
 package news.bcast.app;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,6 +21,8 @@ import com.kakao.network.ErrorResult;
 import com.kakao.network.callback.ResponseCallback;
 import com.kakao.network.storage.ImageUploadResponse;
 import com.kakao.util.helper.log.Logger;
+
+import net.glxn.qrgen.android.QRCode;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -53,6 +57,9 @@ public class ShareActivity extends AppCompatActivity {
         News news = getIntent().getParcelableExtra("news");
         newsTitle.setText(news.getH1());
         newsContent.setText(news.getBody());
+        Bitmap myBitmap = QRCode.from("http://bcast.news/pgs/" + news.getId() + ".html").bitmap();
+        ImageView qrCode = findViewById(R.id.qr_code);
+        qrCode.setImageBitmap(myBitmap);
     }
 
 

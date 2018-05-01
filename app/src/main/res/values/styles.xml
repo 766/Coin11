@@ -7,6 +7,7 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="styleLoadingLayout">@style/LoadingLayoutStyle</item>
+        <item name="android:textViewStyle">@style/customfontstyle</item>
     </style>
 
     <style name="MyCustomTheme" parent="MaterialSearchBarLight">
@@ -50,7 +51,7 @@
         <item name="android:layout_width">@dimen/share_button_size</item>
         <item name="android:layout_height">@dimen/share_button_size</item>
         <item name="android:layout_marginBottom">20dp</item>
-        <item name="android:layout_marginTop">20dp</item>
+        <item name="android:layout_marginTop">40dp</item>
     </style>
 
     <style name="AppTheme.Label">
@@ -101,6 +102,10 @@
         <item name="android:dividerHeight">0dp</item>
         <item name="android:cacheColorHint">@android:color/transparent</item>
         <item name="android:listSelector">@android:color/transparent</item>
+    </style>
+
+    <style name="customfontstyle" parent="@android:style/TextAppearance.Small">
+        <item name="android:fontFamily">@font/poppin</item>
     </style>
 
 </resources>

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">BitCast</string>
+    <string name="app_name">BCast</string>
     <string name="share_btn">全文分享</string>
     <string name="today">今天 03月21 星期三</string>
     <string name="loading">Loading</string>
@@ -26,7 +26,9 @@
     <string name="exit_tip">再按一次退出程序</string>
     <string name="telegram">Telegram</string>
     <string name="push_me_news">订阅新闻</string>
-    <string name="rote_it_now">Rote it now</string>
+    <string name="rate_it_now">Rate it now</string>
     <string name="share_app">Share this App</string>
     <string name="about">About</string>
+    <string name="error">Oops:连接服务器异常咯</string>
+    <string name="end">数据全部加载完毕</string>
 </resources>
