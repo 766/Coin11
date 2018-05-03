@@ -30,7 +30,7 @@ public enum DateStyle {
     HH_MM_SS("HH:mm:ss");
 
 
-    private String value;
+    private final String value;
 
     DateStyle(String value) {
         this.value = value;

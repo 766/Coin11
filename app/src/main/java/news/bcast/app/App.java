@@ -6,6 +6,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.text.TextUtils;
 
+import com.alibaba.fastjson.JSONArray;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 /**
@@ -16,6 +17,7 @@ import com.google.firebase.messaging.FirebaseMessaging;
  */
 public class App extends Application {
     public static final boolean DEBUG = false;
+    public static JSONArray ALL_DATE = new JSONArray();
     private static Context mContext;
 
     public static App getInstance() {
@@ -42,6 +44,7 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         mContext = this;
+        ALL_DATE.add("2018-04-01");
         FirebaseMessaging.getInstance().subscribeToTopic("news");
     }
 }

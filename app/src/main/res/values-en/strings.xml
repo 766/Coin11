@@ -13,7 +13,7 @@
     <string name="friday">Fri.</string>
     <string name="saturday">Sat.</string>
     <string name="sunday">Sun.</string>
-    <!--tabbar-->
+    <!--tabBar-->
     <string name="news">News</string>
     <string name="exchanges">Exchanges</string>
     <string name="settings">Settings</string>

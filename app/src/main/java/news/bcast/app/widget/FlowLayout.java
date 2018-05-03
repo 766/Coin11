@@ -22,11 +22,11 @@ public class FlowLayout extends ViewGroup {
     /**
      * 储存所有的view 按行记录
      */
-    private List<List<View>> mAllViews = new ArrayList<>();
+    private final List<List<View>> mAllViews = new ArrayList<>();
     /**
      * 记录每一行的高度
      */
-    private List<Integer> mLineHeight = new ArrayList<>();
+    private final List<Integer> mLineHeight = new ArrayList<>();
 
     public FlowLayout(Context context, AttributeSet attrs,
                       int defStyleAttr) {

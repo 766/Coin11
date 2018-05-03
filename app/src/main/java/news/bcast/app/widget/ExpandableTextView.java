@@ -1,7 +1,6 @@
 package news.bcast.app.widget;
 
 import android.content.Context;
-import android.os.Build;
 import android.text.Layout;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -20,8 +19,8 @@ public class ExpandableTextView extends android.support.v7.widget.AppCompatTextV
     private int mMaxLines = 3;// TextView最大行数
     private SpannableString SPAN_CLOSE = null;// 收起的文案(颜色处理)
     private SpannableString SPAN_EXPAND = null;// 展开的文案(颜色处理)
-    private String TEXT_EXPAND = "  查看更多>";
-    private String TEXT_CLOSE = "  <收起";
+    private final String TEXT_EXPAND = "  查看更多>";
+    private final String TEXT_CLOSE = "  <收起";
 
     public ExpandableTextView(Context context) {
         super(context);
@@ -100,11 +99,7 @@ public class ExpandableTextView extends android.support.v7.widget.AppCompatTextV
 
         // SDK >= 16 可以直接从xml属性获取最大行数
         int maxLines;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
-            maxLines = getMaxLines();
-        } else {
-            maxLines = mMaxLines;
-        }
+        maxLines = getMaxLines();
         String workingText = originText;
         if (maxLines != -1) {
             Layout layout = createWorkingLayout(workingText);
@@ -153,12 +148,7 @@ public class ExpandableTextView extends android.support.v7.widget.AppCompatTextV
 
     //返回textview的显示区域的layout，该textview的layout并不会显示出来，只是用其宽度来比较要显示的文字是否过长
     private Layout createWorkingLayout(String workingText) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            return new StaticLayout(workingText, getPaint(), initWidth - getPaddingLeft() - getPaddingRight(),
-                    Layout.Alignment.ALIGN_NORMAL, getLineSpacingMultiplier(), getLineSpacingExtra(), false);
-        } else {
-            return new StaticLayout(workingText, getPaint(), initWidth - getPaddingLeft() - getPaddingRight(),
-                    Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
-        }
+        return new StaticLayout(workingText, getPaint(), initWidth - getPaddingLeft() - getPaddingRight(),
+                Layout.Alignment.ALIGN_NORMAL, getLineSpacingMultiplier(), getLineSpacingExtra(), false);
     }
 }

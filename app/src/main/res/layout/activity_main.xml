@@ -9,7 +9,7 @@
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="0dp"
-        android:layout_height="42dp"
+        android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -26,11 +26,11 @@
         <ImageView
             android:id="@+id/search"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="30dp"
             android:layout_gravity="end"
             android:layout_marginEnd="15dp"
             android:background="@mipmap/search"
-            android:contentDescription="@string/today"
+            android:contentDescription="@string/app_name"
             android:visibility="gone" />
     </android.support.v7.widget.Toolbar>
 

@@ -1,5 +1,6 @@
 package news.bcast.app.holder;
 
+import android.graphics.Color;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,6 +41,14 @@ public abstract class NewsViewHolder extends BaseViewHolder<News> {
         Log.i("ViewHolder", "position" + getDataPosition());
         newsTime.setText(getTime(news.getId()));
         newsTitle.setText(news.getH1());
+        if (news.getT().equals("hot")) {
+            int hotColor = Color.parseColor("#e61019");
+            newsTitle.setTextColor(hotColor);
+            newsContent.setTextColor(hotColor);
+        } else {
+            newsTitle.setTextColor(Color.parseColor("#000000"));
+            newsContent.setTextColor(Color.parseColor("#747474"));
+        }
         newsContent.setExpandListener(new ExpandableTextView.OnExpandListener() {
             @Override
             public void onExpand(ExpandableTextView view) {

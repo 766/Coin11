@@ -416,9 +416,9 @@ abstract public class RecyclerArrayAdapter<T> extends RecyclerView.Adapter<BaseV
                 return view;
             }
         }
-        for (ItemView footerview : footers) {
-            if (footerview.hashCode() == viewType) {
-                View view = footerview.onCreateView(parent);
+        for (ItemView footerView : footers) {
+            if (footerView.hashCode() == viewType) {
+                View view = footerView.onCreateView(parent);
                 StaggeredGridLayoutManager.LayoutParams layoutParams;
                 if (view.getLayoutParams() != null)
                     layoutParams = new StaggeredGridLayoutManager.LayoutParams(view.getLayoutParams());

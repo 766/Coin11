@@ -36,7 +36,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
     public static final String KEY_SEARCH_HISTORY_KEYWORD = "key_search_history_keyword";
     private FlowLayout mFlowLayout;
     private LayoutInflater mInflater;
-    private String[] mVals = new String[]{"Java", "Android", "iOS", "Python",
+    private final String[] mVals = new String[]{"Java", "Android", "iOS", "Python",
             "Mac OS", "PHP", "JavaScript", "Objective-C",
             "Groovy", "Pascal", "Ruby", "Go", "Swift"};//数据模拟，实际应从网络获取此数据
     private SharedPreferences mPref;//使用SharedPreferences记录搜索历史
@@ -205,11 +205,5 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
 
     }
 
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        //save last queries to disk
-    }
 
 }

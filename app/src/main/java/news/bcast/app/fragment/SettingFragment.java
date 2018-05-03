@@ -64,11 +64,6 @@ public class SettingFragment extends Fragment {
         return view;
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-    }
-
     private void fillData() {
         adapter.addAll(NewsProvider.getSettingList());
     }
@@ -126,20 +121,20 @@ public class SettingFragment extends Fragment {
                         Toast.makeText(getContext(), "Couldn't launch the market !", Toast.LENGTH_SHORT).show();
                     }
                 } else if (position == 2) {
-                    share("Bitcast");
+                    share();
                 }
             }
         });
     }
 
-    private void share(String appName) {
+    private void share() {
 
         Intent share_intent = new Intent();
         share_intent.setAction(Intent.ACTION_SEND);
         share_intent.setType("text/plain");
-        share_intent.putExtra(Intent.EXTRA_SUBJECT, "f分享");
-        share_intent.putExtra(Intent.EXTRA_TEXT, "HI 推荐您使用一款软件:" + appName + "https://x2c5z.app.goo.gl/geWN");
-        share_intent = Intent.createChooser(share_intent, "分享");
+        share_intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.share_title));
+        share_intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_content));
+        share_intent = Intent.createChooser(share_intent, getString(R.string.choose_title));
         startActivity(share_intent);
     }
 }

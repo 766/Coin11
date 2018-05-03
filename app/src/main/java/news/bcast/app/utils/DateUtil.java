@@ -1,27 +1,30 @@
 package news.bcast.app.utils;
 
+import android.util.LongSparseArray;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class DateUtil {
-    private static final ThreadLocal<SimpleDateFormat> threadLocal = new ThreadLocal<SimpleDateFormat>();
+    private static final ThreadLocal<SimpleDateFormat> threadLocal = new ThreadLocal<>();
 
     private static final Object object = new Object();
 
     /**
      * 获取SimpleDateFormat
      *
-     * @param parttern 日期格式
+     * @param pattern 日期格式
      * @return SimpleDateFormat对象
      * @throws RuntimeException 异常：非法日期格式
      */
-    private static SimpleDateFormat getDateFormat(String parttern) throws RuntimeException {
-        return new SimpleDateFormat(parttern);
+    private static SimpleDateFormat getDateFormat(String pattern) throws RuntimeException {
+        return new SimpleDateFormat(pattern, Locale.getDefault());
     }
 
     /**
@@ -85,7 +88,7 @@ public class DateUtil {
         Date date = null;
         long timestamp = 0;
         Map<Long, long[]> map = new HashMap();
-        List<Long> absoluteValues = new ArrayList<Long>();
+        List<Long> absoluteValues = new ArrayList<>();
 
         if (timestamps != null && timestamps.size() > 0) {
             if (timestamps.size() > 1) {
@@ -169,7 +172,8 @@ public class DateUtil {
      */
     public static DateStyle getDateStyle(String date) {
         DateStyle dateStyle;
-        Map<Long, DateStyle> map = new HashMap<>();
+        //Map<Long, DateStyle> map = new HashMap<>();
+        LongSparseArray<DateStyle> map = new LongSparseArray<>();
         List<Long> timestamps = new ArrayList<>();
         for (DateStyle style : DateStyle.values()) {
             Date dateTmp = StringToDate(date, style.getValue());

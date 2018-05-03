@@ -1,0 +1,63 @@
+<resources>
+    <string name="app_name">BCast</string>
+    <!--其它-->
+    <string name="today">今天 %1$s %2$s</string>
+    <string name="date_format">MM月dd日</string> <!-- MM 和 dd 请不要改 -->
+    <string name="new_msg">有新的消息</string>
+    <string name="exit_tip">再按一次退出程序</string>
+    <!-- week -->
+    <string name="monday">星期一</string>
+    <string name="tuesday">星期二</string>
+    <string name="wednesday">星期三</string>
+    <string name="thursday">星期四</string>
+    <string name="friday">星期五</string>
+    <string name="saturday">星期六</string>
+    <string name="sunday">星期日</string>
+    <!--tabbar-->
+    <string name="news">快讯</string>
+    <string name="exchanges">交易所</string>
+    <string name="settings">我的</string>
+    <!--settings-->
+    <string name="telegram">Telegram</string>
+    <string name="push_me_news">订阅新闻</string>
+    <string name="rate_it_now">Rate it now</string>
+    <string name="share_app">Share this App</string>
+    <string name="about">About</string>
+    <!--分享-->
+    <string name="share_title">f分享</string>
+    <string name="share_content">HI 推荐您使用一款软件:BCast   https://x2c5z.app.goo.gl/geWN"</string>
+    <string name="choose_title">分享</string>
+    <string name="share_img_success">保存成功</string>
+    <string name="share_img_fail">保存失败</string>
+    <!--搜索-->
+    <string name="search_cancel">取消</string>
+    <string name="search_history">历史搜索</string>
+    <string name="clear_search_history">清除历史搜索记录</string>
+    <!--通知-->
+    <string name="push_notification_title">test</string>
+    <string name="default_notification_channel_id">fcm_default_channel</string>
+    <!--加载数据-->
+    <string name="empty">暂无数据</string>
+    <string name="error">Oops:连接服务器异常咯</string>
+    <string name="loading">Loading&#8230;</string>
+    <string name="no_more">(*￣ω￣) 没有更多了</string>
+    <string name="load_more">更多加载中……</string>
+    <string name="network_error">网络错误,点击重试</string>
+    <string name="retry">加载失败，点击重试～～</string>
+    <!--下拉刷新-->
+    <string name="refresh_header_pulling">下拉可以刷新</string>
+    <string name="refresh_header_refreshing">正在刷新&#8230;</string>
+    <string name="refresh_header_loading">正在加载&#8230;</string>
+    <string name="refresh_header_release">释放立即刷新</string>
+    <string name="refresh_header_finish">刷新完成</string>
+    <string name="refresh_header_failed">刷新失败</string>
+    <!--<string name="refresh_header_update">上次更新 M-d HH:mm</string>-->
+    <!-- 加载更多 -->
+    <string name="refresh_footer_pulling">上拉加载更多</string>
+    <string name="refresh_footer_release">释放立即加载</string>
+    <string name="refresh_footer_loading">正在加载&#8230;</string>
+    <string name="refresh_footer_refreshing">正在刷新&#8230;</string>
+    <string name="refresh_footer_finish">加载完成</string>
+    <string name="refresh_footer_failed">加载失败</string>
+    <string name="refresh_footer_nothing">(*￣ω￣) 没有更多了</string>
+</resources>

@@ -22,9 +22,12 @@ import com.alibaba.fastjson.TypeReference;
 import com.kakao.util.helper.log.Logger;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
+import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 import com.scwang.smartrefresh.layout.listener.SimpleMultiPurposeListener;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,6 +38,7 @@ import java.util.Locale;
 import java.util.Set;
 
 import ezy.ui.layout.LoadingLayout;
+import news.bcast.app.App;
 import news.bcast.app.R;
 import news.bcast.app.ShareActivity;
 import news.bcast.app.adapter.BaseViewHolder;
@@ -65,7 +69,7 @@ public class HomeFragment extends Fragment {
     private LoadingLayout mLoadingLayout;
     private SmartRefreshLayout mRefreshLayout;
     private View newMsg;
-    private JSONArray allDate;
+    private OkHttpClient mClient;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -73,7 +77,7 @@ public class HomeFragment extends Fragment {
         today = getCurrentDate();
     }
 
-    private void getAllDate() {
+    /*private void getAllDate() {
         setUiStat(UI_STAT.loading);
         OkHttpClient client = new OkHttpClient();
         String endpoint = "http://bcast.news/feeds/ls.json";
@@ -98,7 +102,7 @@ public class HomeFragment extends Fragment {
                             if (!TextUtils.isEmpty(result)) {
                                 allDate = JSON.parseArray(result);
                                 currentPage = allDate.size() - 1;
-                                fetchData(null);
+                                fetchData(UI_STAT.loading);
                             }
                         }
                     } catch (Exception e) {
@@ -109,7 +113,7 @@ public class HomeFragment extends Fragment {
                 }
             }
         });
-    }
+    }*/
 
     /**
      * Called to have the fragment instantiate its user interface view.
@@ -135,7 +139,12 @@ public class HomeFragment extends Fragment {
         currentPage = 0;
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         initView(view);
-        getAllDate();
+//        getAllDate();
+        if (App.ALL_DATE.size() == 0) {
+            setUiStat(UI_STAT.error, getString(R.string.error));
+        } else {
+            fetchData(UI_STAT.loading);
+        }
         return view;
     }
 
@@ -145,17 +154,19 @@ public class HomeFragment extends Fragment {
 
     private void fetchData(final UI_STAT stat) {
         setUiStat(stat);
-        OkHttpClient client = new OkHttpClient();
+        if (mClient == null) mClient = new OkHttpClient();
         String baseUrl = "http://bcast.news/feeds/";
-        if (currentPage < 0 && stat == UI_STAT.loadMore) {
-            Toast.makeText(getActivity(), R.string.end, Toast.LENGTH_SHORT).show();
+        if (currentPage == App.ALL_DATE.size() - 1 && stat == UI_STAT.loadMore) {
+            Toast.makeText(getActivity(), R.string.no_more, Toast.LENGTH_SHORT).show();
+        } else if (currentPage > App.ALL_DATE.size() - 1 && stat == UI_STAT.loadMore) {
+            Toast.makeText(getActivity(), R.string.no_more, Toast.LENGTH_SHORT).show();
             return;
         }
-        String endpoint = baseUrl + allDate.get(currentPage);
+        String endpoint = baseUrl + App.ALL_DATE.get(currentPage);
         Request request = new Request.Builder()
                 .url(endpoint)
                 .build();
-        client.newCall(request).enqueue(new Callback() {
+        mClient.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 setUiStat(UI_STAT.error, getString(R.string.error));
@@ -167,7 +178,7 @@ public class HomeFragment extends Fragment {
                     try {
                         ResponseBody body = response.body();
                         if (body == null) {
-                            fetchData(UI_STAT.empty);
+                            setUiStat(UI_STAT.empty);
                         } else {
                             final String result = body.string();
                             if (!TextUtils.isEmpty(result)) {
@@ -185,12 +196,11 @@ public class HomeFragment extends Fragment {
                                     news.setOn((String) linkedHashMap.get("on"));
                                     newsList.add(news);
                                 }
-                                //final List<News> news = GsonUtil.toList(result, News.class);
                                 mRefreshLayout.post(new Runnable() {
                                     @Override
                                     public void run() {
-                                        if (newsList.size() < 4) {
-                                            currentPage--;
+                                        if (mAdapter.getCount() < 3) {
+                                            currentPage++;
                                             fetchData(UI_STAT.loadMore);
                                         }
                                         Collections.sort(newsList);
@@ -260,8 +270,8 @@ public class HomeFragment extends Fragment {
     private String getCurrentDate() {
         long now = System.currentTimeMillis();
         Week week = DateUtil.getWeek(new Date());
-        SimpleDateFormat sdf = new SimpleDateFormat("今天 MM月dd日", Locale.CHINA);
-        return sdf.format(now) + week.getChineseName();
+        SimpleDateFormat sdf = new SimpleDateFormat(getString(R.string.date_format), Locale.US);
+        return getString(R.string.today, sdf.format(now), week.getNameDefault());
     }
 
     private void initView(View view) {
@@ -274,11 +284,31 @@ public class HomeFragment extends Fragment {
 
         mRefreshLayout = view.findViewById(R.id.refreshLayout);
         mRefreshLayout.setEnableFooterFollowWhenLoadFinished(true);
+        ClassicsHeader.REFRESH_HEADER_PULLING = getString(R.string.refresh_header_pulling);
+        ClassicsHeader.REFRESH_HEADER_REFRESHING = getString(R.string.refresh_header_refreshing);
+        ClassicsHeader.REFRESH_HEADER_LOADING = getString(R.string.refresh_header_loading);
+        ClassicsHeader.REFRESH_HEADER_RELEASE = getString(R.string.refresh_header_release);
+        ClassicsHeader.REFRESH_HEADER_FINISH = getString(R.string.refresh_header_finish);
+        ClassicsHeader.REFRESH_HEADER_FAILED = getString(R.string.refresh_header_failed);
+//        ClassicsHeader.REFRESH_HEADER_UPDATE = getString(R.string.refresh_header_update);
+
+        ClassicsFooter.REFRESH_FOOTER_PULLING = getString(R.string.refresh_footer_pulling);//"上拉加载更多";
+        ClassicsFooter.REFRESH_FOOTER_RELEASE = getString(R.string.refresh_footer_release);//"释放立即加载";
+        ClassicsFooter.REFRESH_FOOTER_LOADING = getString(R.string.refresh_footer_loading);//"正在加载...";
+        ClassicsFooter.REFRESH_FOOTER_REFRESHING = getString(R.string.refresh_footer_refreshing);//"正在刷新...";
+        ClassicsFooter.REFRESH_FOOTER_FINISH = getString(R.string.refresh_footer_finish);//"加载完成";
+        ClassicsFooter.REFRESH_FOOTER_FAILED = getString(R.string.refresh_footer_failed);//"加载失败";
+        ClassicsFooter.REFRESH_FOOTER_NOTHING = getString(R.string.refresh_footer_nothing);//"没有更多数据了";
+
 
         RecyclerView mRecyclerView = view.findViewById(R.id.content_list);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mLoadingLayout = view.findViewById(R.id.loading);
+        mLoadingLayout.setEmptyText(getString(R.string.empty));
+        mLoadingLayout.setErrorText(getString(R.string.error));
+        mLoadingLayout.setRetryText(getString(R.string.retry));
+        mLoadingLayout.setLoading(R.layout.loading_layout_loading);
         mLoadingLayout.showLoading();
 
         setListener(mRecyclerView);
@@ -309,8 +339,10 @@ public class HomeFragment extends Fragment {
                         if (!hasNetWork) {
                             return;
                         }
+                        refAllDate();
                         mAdapter.clear();
-                        currentPage = allDate.size() - 1;
+                        currentPage = 0;
+                        mClient.dispatcher().cancelAll();
                         fetchData(UI_STAT.normal);
                     }
                 });
@@ -324,13 +356,12 @@ public class HomeFragment extends Fragment {
                         if (!hasNetWork) {
                             return;
                         }
-                        currentPage--;
+                        currentPage++;
                         fetchData(UI_STAT.loadMore);
 //                        if (mAdapter.getCount() > 12) {
 //                            Toast.makeText(getActivity(), "数据全部加载完毕", Toast.LENGTH_SHORT).show();
 //                            refreshLayout.finishLoadMoreWithNoMoreData();//设置之后，将不会再触发加载事件
 //                        } else {
-//                            mAdapter.addAll(NewsProvider.getPersonList(page));
 //                            refreshLayout.finishLoadMore();
 //                            page++;
 //                        }
@@ -343,7 +374,7 @@ public class HomeFragment extends Fragment {
         mLoadingLayout.setRetryListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                currentPage = allDate.size() - 1;
+                currentPage = 0;
                 fetchData(UI_STAT.loading);
             }
         });
@@ -357,9 +388,54 @@ public class HomeFragment extends Fragment {
         });
     }
 
-    private String getDate(int pos) {
-        Date date = DateUtil.addDay(new Date(), pos);
-        return DateUtil.getDate(date);
+    private void refAllDate() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        try {
+            if (sdf.parse(DateUtil.getDate(new Date())).after(sdf.parse((String) App.ALL_DATE.get(0)))) {
+                getAllDate();
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+//    private String getDate(int pos) {
+//        Date date = DateUtil.addDay(new Date(), pos);
+//        return DateUtil.getDate(date);
+//    }
+
+    private void getAllDate() {
+        OkHttpClient client = new OkHttpClient();
+        String endpoint = "http://bcast.news/feeds/ls.json";
+        Request request = new Request.Builder()
+                .url(endpoint)
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) {
+                if (response.isSuccessful() && response.code() == 200) {
+                    try {
+                        ResponseBody body = response.body();
+                        if (body != null) {
+                            final String result = body.string();
+                            if (!TextUtils.isEmpty(result)) {
+                                JSONArray dates = JSON.parseArray(result);
+                                Collections.reverse(dates);
+                                App.ALL_DATE.clear();
+                                App.ALL_DATE.addAll(dates);
+                            }
+                        }
+                    } catch (Exception e) {
+                        Logger.d("Exception = " + e);
+                    }
+                }
+            }
+        });
     }
 
     private enum UI_STAT {

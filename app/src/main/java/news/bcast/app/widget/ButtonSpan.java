@@ -13,9 +13,9 @@ import android.view.View;
  */
 class ButtonSpan extends ClickableSpan {
 
-    View.OnClickListener onClickListener;
-    private Context context;
-    private int colorId;
+    final View.OnClickListener onClickListener;
+    private final Context context;
+    private final int colorId;
 
     public ButtonSpan(Context context, View.OnClickListener onClickListener) {
         this(context, onClickListener, android.R.color.background_dark);

@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
     @NorIcons
     @SuppressWarnings("all ")
 
-    private static final int[] mNormalIcon = {R.mipmap.news, R.mipmap.trend, R.mipmap.settings};
+    private static final int[] mNormalIcon = {R.mipmap.news_normal, R.mipmap.trend_normal, R.mipmap.settings_normal};
 
     private static final int PAGES = 3;
     private static final String ACTION_NEW_MSG = "com.bitcast.new.msg";

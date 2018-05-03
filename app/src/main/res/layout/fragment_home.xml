@@ -10,7 +10,6 @@
         android:layout_gravity="center"
         android:background="@color/colorPrimary"
         android:padding="8dp"
-        android:text="@string/today"
         android:textColor="@android:color/white"
         android:textSize="13sp"
         android:textStyle="bold"

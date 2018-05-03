@@ -8,7 +8,6 @@
     android:paddingLeft="20dp"
     android:paddingRight="20dp"
     android:paddingTop="10dp"
-    android:text="Helloworld"
     android:textColor="#3f3e3e"
     android:textSize="14sp">
 

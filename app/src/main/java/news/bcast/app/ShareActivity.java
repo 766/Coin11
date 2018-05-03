@@ -11,6 +11,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.tu.loadingdialog.LoadingDailog;
 import com.kakao.kakaolink.v2.KakaoLinkResponse;
 import com.kakao.kakaolink.v2.KakaoLinkService;
 import com.kakao.message.template.ButtonObject;
@@ -27,7 +28,9 @@ import net.glxn.qrgen.android.QRCode;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import news.bcast.app.bean.News;
 import news.bcast.app.utils.DateUtil;
@@ -43,6 +46,8 @@ import news.bcast.app.utils.Week;
 
 public class ShareActivity extends AppCompatActivity {
     private View mScrollView;
+    private String pgs;
+    private LoadingDailog mDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -57,9 +62,17 @@ public class ShareActivity extends AppCompatActivity {
         News news = getIntent().getParcelableExtra("news");
         newsTitle.setText(news.getH1());
         newsContent.setText(news.getBody());
-        Bitmap myBitmap = QRCode.from("http://bcast.news/pgs/" + news.getId() + ".html").bitmap();
+        pgs = "/pgs/" + news.getId() + ".html";
+        String baseUrl = "http://bcast.news";
+        Bitmap myBitmap = QRCode.from(baseUrl + pgs).bitmap();
         ImageView qrCode = findViewById(R.id.qr_code);
         qrCode.setImageBitmap(myBitmap);
+
+        LoadingDailog.Builder loadBuilder = new LoadingDailog.Builder(this)
+                .setCancelable(true)
+                .setCancelOutside(true);
+        loadBuilder.setShowMessage(false);
+        mDialog = loadBuilder.create();
     }
 
 
@@ -69,6 +82,7 @@ public class ShareActivity extends AppCompatActivity {
     }
 
     public void shareKakao(View view) {
+        mDialog.show();
         view.post(new Runnable() {
             @Override
             public void run() {
@@ -81,12 +95,14 @@ public class ShareActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(ErrorResult errorResult) {
                         Logger.e(errorResult.toString());
+                        mDialog.dismiss();
                         showToast(errorResult.getErrorMessage());
                     }
 
                     @Override
                     public void onSuccess(ImageUploadResponse result) {
                         Logger.d(result.getOriginal().getUrl());
+                        mDialog.dismiss();
                         sendFeed(result.getOriginal().getUrl());
                     }
                 });
@@ -96,25 +112,15 @@ public class ShareActivity extends AppCompatActivity {
     }
 
     private void sendFeed(String imgUrl) {
-        FeedTemplate params = FeedTemplate
-                .newBuilder(ContentObject.newBuilder("test title",
-                        imgUrl,
-                        LinkObject.newBuilder().setWebUrl("https://developers.kakao.com")
-                                .setMobileWebUrl("https://developers.kakao.com").build())
-                        .setDescrption("test description")
-                        .build())
-                //.setSocial(SocialObject.newBuilder().setLikeCount(10).setCommentCount(20) //add 社交
-                //.setSharedCount(30).setViewCount(40).build())
-                .addButton(new ButtonObject("详细信息", LinkObject.newBuilder().setWebUrl("https://developers.kakao.com").setMobileWebUrl("https://developers.kakao.com").build()))
-                .addButton(new ButtonObject("获取APP", LinkObject.newBuilder()
-                        .setWebUrl("'https://developers.kakao.com")
-                        .setMobileWebUrl("'https://developers.kakao.com")
-                        .setAndroidExecutionParams("key1=value1")
-                        .setIosExecutionParams("key1=value1")
-                        .build()))
-                .build();
+        String templateId = "9352";
 
-        KakaoLinkService.getInstance().sendDefault(this, params, new ResponseCallback<KakaoLinkResponse>() {
+        Map<String, String> templateArgs = new HashMap<>();
+        templateArgs.put("img_url", imgUrl);
+        templateArgs.put("img_w", "600");
+        templateArgs.put("img_h", "600");
+        templateArgs.put("news_id", pgs);
+
+        KakaoLinkService.getInstance().sendScrap(this, "http://bcast.news", templateId, templateArgs, new ResponseCallback<KakaoLinkResponse>() {
             @Override
             public void onFailure(ErrorResult errorResult) {
                 Logger.e(errorResult.toString());
@@ -122,9 +128,38 @@ public class ShareActivity extends AppCompatActivity {
 
             @Override
             public void onSuccess(KakaoLinkResponse result) {
-
+                Logger.d(result.getTemplateMsg().toString());
             }
         });
+
+        FeedTemplate params = FeedTemplate
+                .newBuilder(ContentObject.newBuilder(null,
+                        imgUrl,
+                        LinkObject.newBuilder().setWebUrl("https://developers.kakao.com")
+                                .setMobileWebUrl("https://developers.kakao.com").build())
+//                        .setDescrption("test description")
+                        .build())
+                //.setSocial(SocialObject.newBuilder().setLikeCount(10).setCommentCount(20) //add 社交
+                //.setSharedCount(30).setViewCount(40).build())
+                .addButton(new ButtonObject("获取更多", LinkObject.newBuilder()
+                        .setWebUrl("'https://developers.kakao.com")
+                        .setMobileWebUrl("'https://developers.kakao.com")
+                        .setAndroidExecutionParams("key1=value1")
+                        .setIosExecutionParams("key1=value1")
+                        .build()))
+                .build();
+
+//        KakaoLinkService.getInstance().sendDefault(this, params, new ResponseCallback<KakaoLinkResponse>() {
+//            @Override
+//            public void onFailure(ErrorResult errorResult) {
+//                Logger.e(errorResult.toString());
+//            }
+//
+//            @Override
+//            public void onSuccess(KakaoLinkResponse result) {
+//
+//            }
+//        });
     }
 
     public void savePic(View view) {
@@ -135,9 +170,9 @@ public class ShareActivity extends AppCompatActivity {
                         .getBitmapByView((ScrollView) mScrollView));
 
                 if (!TextUtils.isEmpty(fpath)) {
-                    showToast("保存成功");
+                    showToast(getString(R.string.share_img_success));
                 } else
-                    showToast("保存失败");
+                    showToast(getString(R.string.share_img_fail));
             }
         });
     }
@@ -153,7 +188,7 @@ public class ShareActivity extends AppCompatActivity {
         Week week = DateUtil.getWeek(new Date());
         String format = getString(R.string.date_format);
         SimpleDateFormat sdf = new SimpleDateFormat(format, Locale.US);
-        return sdf.format(now) + week.getChineseName();
+        return sdf.format(now) + week.getNameDefault();
     }
 
 }

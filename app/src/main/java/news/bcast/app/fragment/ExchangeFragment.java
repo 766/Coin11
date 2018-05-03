@@ -13,13 +13,12 @@ import news.bcast.app.R;
 
 
 /**
- * Created by KangWei on 2018/4/11.
+ * Created by Kang Wei on 2018/4/11.
  * 2018/4/11 14:46
  * Coin11
- * com.bitcast.app.fragment
+ * news.bcast.app.fragment
  */
 public class ExchangeFragment extends android.support.v4.app.Fragment {
-    private WebView webView;
 
     @Nullable
     @Override
@@ -30,7 +29,7 @@ public class ExchangeFragment extends android.support.v4.app.Fragment {
     }
 
     private void initView(View view) {
-        webView = view.findViewById(R.id.webview);
+        WebView webView = view.findViewById(R.id.webview);
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
